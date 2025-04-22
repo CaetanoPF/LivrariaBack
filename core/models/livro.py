@@ -1,4 +1,6 @@
 from django.db import models
+
+from .autor import Autor
 from .categoria import Categoria
 from .editora import Editora
 
@@ -14,7 +16,7 @@ class Livro(models.Model):
         Categoria, on_delete=models.PROTECT, related_name="livros", null=True, blank=True
     )
     editora = models.ForeignKey(Editora, on_delete=models.PROTECT, related_name="livros", null=True, blank=True)
-
+    autor = models.ForeignKey(Autor, on_delete=models.PROTECT, related_name='livros', null=True, blank=True)
     
     def __str__(self):
         return f"({self.id}) {self.titulo} ({self.quantidade})"
