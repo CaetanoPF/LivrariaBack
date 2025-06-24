@@ -15,6 +15,7 @@ class UserAdmin(BaseUserAdmin):
 
     ordering = ['id']
     list_display = ['email', 'name']
+    (_('Personal Info'), {'fields': ('name', 'passage_id', 'foto')}),# inclua a foto aqui
     fieldsets = (
         (None, {'fields': ('email', 'password')}),
         (_('Personal Info'), {'fields': ('name', 'passage_id')}),
