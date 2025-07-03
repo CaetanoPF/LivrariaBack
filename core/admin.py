@@ -88,3 +88,11 @@ class CompraAdmin(admin.ModelAdmin):
     list_display = ('usuario', 'status')
     ordering = ('usuario', 'status')
     list_per_page = 10
+
+@admin.register(models.ItensCompra)
+class ItensCompraAdmin(admin.ModelAdmin):
+    list_display = ('compra', 'livro', 'quantidade')
+    search_fields = ('compra', 'livro')
+    list_filter = ('compra', 'livro')
+    ordering = ('compra', 'livro')
+    list_per_page = 10
