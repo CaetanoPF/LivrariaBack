@@ -26,18 +26,29 @@ class ItensCompraCreateUpdateSerializer(ModelSerializer):
 
 class CompraCreateUpdateSerializer(ModelSerializer):
     usuario = HiddenField(default=CurrentUserDefault())
+    itens = ItensCompraCreateUpdateSerializer(many=True)
+
+    def create(self, validated_data):
+        itens_data = validated_data.pop('itens')
+        compra = Compra.objects.create(**validated_data)
+        for item_data in itens_data:
+            item_data['preco'] = item_data['livro'].preco  # preço do livro no momento da compra
+            ItensCompra.objects.create(compra=compra, **item_data)
+        compra.save()
+        return compra
 
     def update(self, compra, validated_data):
         itens_data = validated_data.pop('itens', [])
         if itens_data:
             compra.itens.all().delete()
             for item_data in itens_data:
+                item_data['preco'] = item_data['livro'].preco  # preço do livro no momento da compra
                 ItensCompra.objects.create(compra=compra, **item_data)
         return super().update(compra, validated_data)
-
+    
     class Meta:
         model = Compra
-        fields = ('id', 'usuario', 'itens')
+        fields = ('usuario', 'itens')
 
 class ItensCompraSerializer(ModelSerializer):
     total = SerializerMethodField()

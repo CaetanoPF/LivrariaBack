@@ -20,14 +20,15 @@ class ItensCompra(models.Model):
     compra = models.ForeignKey(Compra, on_delete=models.CASCADE, related_name='itens')
     livro = models.ForeignKey(Livro, on_delete=models.PROTECT, related_name='+')
     quantidade = models.IntegerField(default=1)
+    preco = models.DecimalField(max_digits=10, decimal_places=2, default=0)
 
     def __str__(self):
         return f'Item {self.id} - {self.livro.titulo} - {self.quantidade} unidades'
     
     @property
     def total(self):
-        # total = 0
-        # for item in self.itens.all():
-        #     total += item.livro.preco * item.quantidade
-        # return total
-        return sum(item.livro.preco * item.quantidade for item in self.itens.all())
+        return sum(item.preco * item.quantidade for item in self.itens.all())
+    class Meta:
+        verbose_name = 'Item de Compra'
+        verbose_name_plural = 'Itens de Compra'
+        unique_together = ('compra', 'livro')
